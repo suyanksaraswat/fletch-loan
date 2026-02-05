@@ -12,10 +12,11 @@ import {
 import { useLoanStore } from '@/store/loan';
 
 export default function SelectHouseType() {
-  const { houseType, updateHouseType, updateCurrentStep } = useLoanStore();
+  const { form, setForm, updateCurrentStep } = useLoanStore();
+  const { houseType } = form;
 
   const handleChange = (houseType: 'Own' | 'Mortgage' | 'Rented') => {
-    updateHouseType(houseType);
+    setForm({ houseType });
   };
 
   return (

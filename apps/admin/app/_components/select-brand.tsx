@@ -6,7 +6,8 @@ import { useGetBrands } from '@/services/loans/useGetBrands';
 import { useLoanStore } from '@/store/loan';
 
 export default function SelectBrand() {
-  const { brand, updateBrand, updateCurrentStep } = useLoanStore();
+  const { form, setForm, updateCurrentStep } = useLoanStore();
+  const { brand } = form;
 
   const { data: brands, isLoading: isLoadingBrands } = useGetBrands();
 
@@ -21,7 +22,12 @@ export default function SelectBrand() {
               <Button
                 key={b.id}
                 variant={b.value === brand ? 'default' : 'outline'}
-                onClick={() => updateBrand(b.value as 'KIA' | 'TOYOTA')}
+                onClick={() =>
+                  setForm({
+                    brand: b.value as 'KIA' | 'TOYOTA',
+                    car: null,
+                  })
+                }
               >
                 {b.name}
               </Button>

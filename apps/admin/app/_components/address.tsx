@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 import { Button } from '@workspace/ui/components/button';
 import { Spinner } from '@workspace/ui/components/spinner';
 import { Input } from '@workspace/ui/components/input';
@@ -9,26 +7,8 @@ import { useLoanStore } from '@/store/loan';
 import { useGetScore } from '@/services/loans/useGetScore';
 
 export default function Address() {
-  const {
-    street,
-    city,
-    state,
-    zipCode,
-    fireAlarm,
-    updateAddress,
-    updateCurrentStep,
-    updateFireAlarm,
-    ssn,
-    updateSSN,
-    updateScore,
-  } = useLoanStore();
-
-  const [streetForm, setStreetForm] = useState(street || '');
-  const [cityForm, setCityForm] = useState(city || '');
-  const [stateForm, setStateForm] = useState(state || '');
-  const [zipCodeForm, setZipCodeForm] = useState(zipCode || '');
-  const [fireAlarmForm, setFireAlarmForm] = useState(fireAlarm ?? false);
-  const [ssnForm, setSSNForm] = useState(ssn || '');
+  const { form, setForm, updateCurrentStep } = useLoanStore();
+  const { street, city, state, zipCode, fireAlarm, ssn } = form;
 
   const { mutateAsync: getScore, isPending: isCheckingScore } = useGetScore();
 
@@ -44,19 +24,18 @@ export default function Address() {
 
   const handleChange = (key: string, value: string) => {
     if (key === 'street') {
-      setStreetForm(value);
+      setForm({ street: value });
     } else if (key === 'city') {
-      setCityForm(value);
+      setForm({ city: value });
     } else if (key === 'state') {
-      setStateForm(value);
-
-      if (value === 'FL' && fireAlarmForm === false) {
-        setFireAlarmForm(true);
-      }
+      setForm({
+        state: value,
+        fireAlarm: value === 'FL' ? true : fireAlarm,
+      });
     } else if (key === 'zipCode') {
-      setZipCodeForm(value);
+      setForm({ zipCode: value });
     } else if (key === 'ssn') {
-      const currentMasked = maskSsn(ssnForm);
+      const currentMasked = maskSsn(ssn);
 
       if (
         value.length > currentMasked.length &&
@@ -66,12 +45,12 @@ export default function Address() {
         const newChar = value[value.length - 1];
 
         if (/^\d$/.test(newChar ?? '')) {
-          const nextRaw = (ssnForm + newChar).slice(0, 10);
-          setSSNForm(nextRaw);
+          const nextRaw = (ssn + newChar).slice(0, 10);
+          setForm({ ssn: nextRaw });
         }
       } else if (value.length < currentMasked.length && currentMasked.startsWith(value)) {
-        const nextRaw = ssnForm.slice(0, -1);
-        setSSNForm(nextRaw);
+        const nextRaw = ssn.slice(0, -1);
+        setForm({ ssn: nextRaw });
       }
     }
   };
@@ -82,22 +61,22 @@ export default function Address() {
       <div className="mb-4 flex justify-center gap-4">
         <Input
           placeholder="Street"
-          value={streetForm}
+          value={street}
           onChange={(e) => handleChange('street', e.target.value)}
         />
         <Input
           placeholder="City"
-          value={cityForm}
+          value={city}
           onChange={(e) => handleChange('city', e.target.value)}
         />
         <Input
           placeholder="State"
-          value={stateForm}
+          value={state}
           onChange={(e) => handleChange('state', e.target.value)}
         />
         <Input
           placeholder="Zip Code"
-          value={zipCodeForm}
+          value={zipCode}
           onChange={(e) => handleChange('zipCode', e.target.value)}
         />
       </div>
@@ -106,36 +85,32 @@ export default function Address() {
         <h4>SSN</h4>
         <Input
           placeholder="SSN"
-          value={maskSsn(ssnForm)}
+          value={maskSsn(ssn)}
           maxLength={10}
           onChange={(e) => handleChange('ssn', e.target.value)}
         />
       </div>
 
-      {stateForm === 'FL' && (
+      {state === 'FL' && (
         <div>
           <div>
             <h4>Fire Alarm</h4>
-            <Switch checked={fireAlarmForm} onCheckedChange={setFireAlarmForm} />
+            <Switch checked={fireAlarm} onCheckedChange={(checked) => setForm({ fireAlarm: checked })} />
           </div>
         </div>
       )}
 
       <div className="mt-10 flex justify-end">
         <Button
-          disabled={!streetForm || !cityForm || !stateForm || !zipCodeForm || isCheckingScore}
+          disabled={!street || !city || !state || !zipCode || isCheckingScore}
           onClick={async () => {
-            if (streetForm && cityForm && stateForm && zipCodeForm && ssnForm) {
+            if (street && city && state && zipCode && ssn) {
               try {
-                updateAddress(streetForm, cityForm, stateForm, zipCodeForm);
-                updateSSN(ssnForm);
-                updateFireAlarm(fireAlarmForm);
-
-                const { score } = await getScore({ ssn: ssnForm });
-                updateScore(score);
+                const { score } = await getScore({ ssn });
+                setForm({ score });
               } catch (error) {
                 console.error('Error while checking bureau score', error);
-                updateScore(null);
+                setForm({ score: null });
               } finally {
                 updateCurrentStep(5);
               }

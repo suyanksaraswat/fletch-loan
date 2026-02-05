@@ -1,7 +1,14 @@
 import { useLoanStore } from '@/store/loan';
 
-export default function Offer() {
-  const { brand, car, houseType, state, fireAlarm, score } = useLoanStore();
+const isEligibleForLoan = (params: {
+  brand: string | null;
+  car: string | null;
+  houseType: string | null;
+  state: string;
+  fireAlarm: boolean;
+  score: number | null;
+}) => {
+  const { brand, car, houseType, state, fireAlarm, score } = params;
 
   const eligibleCar =
     (brand === 'TOYOTA' && (car === 'Land Cruiser' || car === 'Fortuner')) ||
@@ -13,7 +20,21 @@ export default function Offer() {
 
   const eligibleScore = typeof score === 'number' && score > 650;
 
-  const isEligible = eligibleCar && eligibleHouse && eligibleFire && eligibleScore;
+  return eligibleCar && eligibleHouse && eligibleFire && eligibleScore;
+};
+
+export default function Offer() {
+  const { form } = useLoanStore();
+  const { brand, car, houseType, state, fireAlarm, score } = form;
+
+  const isEligible = isEligibleForLoan({
+    brand,
+    car,
+    houseType,
+    state,
+    fireAlarm,
+    score,
+  });
 
   return (
     <div className="flex flex-col items-center justify-center gap-4 text-center">

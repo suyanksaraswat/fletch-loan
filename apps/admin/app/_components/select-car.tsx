@@ -9,7 +9,8 @@ import { useLoanStore } from '@/store/loan';
 import { CAR_BRANDS, KIA_CARS, TOYOTA_CARS } from '@/utils/constants';
 
 export default function SelectCar() {
-  const { brand, car, updateCar, updateCurrentStep } = useLoanStore();
+  const { form, setForm, updateCurrentStep } = useLoanStore();
+  const { brand, car } = form;
 
   const { data: cars, isLoading: isLoadingCars } = useGetCars({
     brand: brand as 'KIA' | 'TOYOTA',
@@ -27,7 +28,7 @@ export default function SelectCar() {
               <Button
                 key={b.id}
                 variant={b.value === car ? 'default' : 'outline'}
-                onClick={() => updateCar(b.value)}
+                onClick={() => setForm({ car: b.value })}
               >
                 {b.name}
               </Button>

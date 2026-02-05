@@ -2,55 +2,51 @@ import { create } from 'zustand';
 
 type CarBrand = 'KIA' | 'TOYOTA';
 
-interface Loan {
-  currentStep: number;
+type HouseType = 'Own' | 'Mortgage' | 'Rented';
+
+interface LoanForm {
   brand: CarBrand | null;
   car: string | null;
-  houseType: 'Own' | 'Mortgage' | 'Rented' | null;
-  street: string | null;
-  city: string | null;
-  state: string | null;
-  zipCode: string | null;
-  fireAlarm: boolean | null;
-  ssn: string | null;
+  houseType: HouseType | null;
+  street: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  fireAlarm: boolean;
+  ssn: string;
   score: number | null;
-
-  updateCurrentStep: (step: number) => void;
-
-  updateBrand: (brand: CarBrand) => void;
-  updateCar: (car: string) => void;
-  updateHouseType: (houseType: 'Own' | 'Mortgage' | 'Rented') => void;
-  updateAddress: (street: string, city: string, state: string, zipCode: string) => void;
-  updateFireAlarm: (fireAlarm: boolean) => void;
-  updateSSN: (ssn: string) => void;
-  updateScore: (score: number | null) => void;
 }
 
-export const useLoanStore = create<Loan>((set) => ({
+interface LoanState {
+  currentStep: number;
+  form: LoanForm;
+
+  updateCurrentStep: (step: number) => void;
+  setForm: (partial: Partial<LoanForm>) => void;
+}
+
+export const useLoanStore = create<LoanState>((set) => ({
   currentStep: 1,
-  brand: null,
-  car: null,
-  houseType: null,
-  street: null,
-  city: null,
-  state: null,
-  zipCode: null,
-  fireAlarm: null,
-  ssn: null,
-  score: null,
+  form: {
+    brand: null,
+    car: null,
+    houseType: null,
+    street: '',
+    city: '',
+    state: '',
+    zipCode: '',
+    fireAlarm: false,
+    ssn: '',
+    score: null,
+  },
+
   updateCurrentStep: (step: number) => set({ currentStep: step }),
 
-  updateBrand: (brand: CarBrand) => set({ brand, car: null }),
-  updateCar: (car: string) => set({ car }),
-  updateHouseType: (houseType: 'Own' | 'Mortgage' | 'Rented') => set({ houseType }),
-  updateAddress: (street: string, city: string, state: string, zipCode: string) =>
-    set({
-      street,
-      city,
-      state,
-      zipCode,
-    }),
-  updateFireAlarm: (fireAlarm: boolean) => set({ fireAlarm }),
-  updateSSN: (ssn: string) => set({ ssn }),
-   updateScore: (score: number | null) => set({ score }),
+  setForm: (partial: Partial<LoanForm>) =>
+    set((state) => ({
+      form: {
+        ...state.form,
+        ...partial,
+      },
+    })),
 }));
