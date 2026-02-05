@@ -1,0 +1,45 @@
+{
+  "name": "fletch-loan",
+  "version": "0.0.1",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build --turbopack",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@fingerprintjs/fingerprintjs-pro": "^3.12.6",
+    "@hookform/resolvers": "^5.2.2",
+    "@tanstack/react-query": "^5.90.20",
+    "@workspace/ui": "workspace:*",
+    "axios": "^1.13.2",
+    "cookies-next": "^6.1.1",
+    "lucide-react": "^0.544.0",
+    "next": "16.0.10",
+    "next-auth": "^4.24.13",
+    "next-themes": "^0.4.6",
+    "react": "19.2.1",
+    "react-dom": "19.2.1",
+    "react-hook-form": "^7.71.1",
+    "sonner": "^2.0.7",
+    "zod": "^4.3.4",
+    "zustand": "^5.0.11"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.13",
+    "@trivago/prettier-plugin-sort-imports": "^6.0.0",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@workspace/eslint-config": "workspace:*",
+    "@workspace/typescript-config": "workspace:*",
+    "babel-plugin-react-compiler": "^1.0.0",
+    "eslint-config-next": "16.0.10",
+    "prettier": "^3.7.4",
+    "prettier-plugin-tailwindcss": "^0.7.2",
+    "tailwindcss": "^4.1.13",
+    "typescript": "^5.9.2"
+  }
+}
