@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://user-images.githubusercontent.com/4060187/196936104-5797972c-ab10-4834-bd61-0d1e5f442c9c.png" alt="Turborepo" width="200" />
+  <img src="https://media.licdn.com/dms/image/v2/C560BAQHzzaL_ARkaAg/company-logo_200_200/company-logo_200_200/0/1630662302519/fletchapi_logo?e=1772064000&v=beta&t=gzp7HX6vtnB_d2JS5ahJdQdWEyb8Is-FX-drdDIrm0Y" alt="Turborepo" width="200" />
 </div>
 
 # Turborepo + shadcn/ui v2 + Base UI + Tailwind CSS v4 + Next.js 16 + React 19
